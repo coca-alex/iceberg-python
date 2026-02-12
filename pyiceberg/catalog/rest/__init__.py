@@ -261,7 +261,7 @@ class TableResponse(IcebergBaseModel):
     metadata_location: str | None = Field(alias="metadata-location", default=None)
     metadata: TableMetadata
     config: Properties = Field(default_factory=dict)
-    storage_credentials: List[StorageCredential] = Field(
+    storage_credentials: list[StorageCredential] = Field(
         default_factory=list,
         alias="storage-credentials"
     )
@@ -780,10 +780,10 @@ class RestCatalog(Catalog):
 
     @staticmethod
     def _get_credentials(
-        storage_credentials: Optional[List[StorageCredential]],
+        storage_credentials: list[StorageCredential] | None,
         config: Properties,
-        metadata_location: Optional[str],
-        table_location: Optional[str],
+        metadata_location: str | None,
+        table_location: str | None,
     ) -> Properties:
         if not storage_credentials:
             return config
@@ -793,7 +793,7 @@ class RestCatalog(Catalog):
             return config
 
         # Choose the most specific (longest) matching prefix
-        matching: List[StorageCredential] = [sc for sc in storage_credentials if target.startswith(sc.prefix)]
+        matching: list[StorageCredential] = [sc for sc in storage_credentials if target.startswith(sc.prefix)]
         if not matching:
             return config
 
